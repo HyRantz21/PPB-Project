@@ -21,26 +21,39 @@ class _HomepageState extends State<Homepage> {
             currentPageIndex = index;
           });
         },
-        indicatorColor: const Color.fromARGB(255, 220, 220, 220),
+        backgroundColor: Color.fromARGB(255, 0, 0, 0),
+        indicatorColor: Color.fromARGB(255, 255, 255, 255),
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
             selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
+            icon: Icon(
+              Icons.home_outlined,
+              color: Colors.white,
+            ),
             label: 'Home',
           ),
           NavigationDestination(
-            icon: Icon(Icons.history),
+            icon: Icon(
+              Icons.history,
+              color: Colors.white,
+            ),
             label: 'History',
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.bookmark),
-            icon: Icon(Icons.bookmark_outline),
+            icon: Icon(
+              Icons.bookmark_outline,
+              color: Colors.white,
+            ),
             label: 'Wishlist',
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.person),
-            icon: Icon(Icons.person_outlined),
+            icon: Icon(
+              Icons.person_outlined,
+              color: Colors.white,
+            ),
             label: 'Profile',
           ),
         ],
@@ -70,33 +83,35 @@ class _HomepageState extends State<Homepage> {
         ],
       ),
       body: currentPageIndex == 0
-          ? ListView(
-              children: [
-                Container(
-                  height: 1000,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 245, 245, 245),
-                    borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(15),
-                        bottomRight: Radius.circular(15)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(1),
-                        spreadRadius: 0.5,
-                        blurRadius: 1.5,
-                        offset: const Offset(2, 2),
-                      ),
-                    ],
+          ? SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    height: 1000,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 245, 245, 245),
+                      borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(15),
+                          bottomRight: Radius.circular(15)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(1),
+                          spreadRadius: 0.5,
+                          blurRadius: 1.5,
+                          offset: const Offset(2, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        carousel(),
+                        categoryList(),
+                        item(),
+                      ],
+                    ),
                   ),
-                  child: Column(
-                    children: [
-                      carousel(),
-                      categoryList(),
-                      item(),
-                    ],
-                  ),
-                ),
-              ],
+                ],
+              ),
             )
           : currentPageIndex == 1
               ? // History page
@@ -191,23 +206,25 @@ class _HomepageState extends State<Homepage> {
               Text("Find Your Preference"),
             ],
           ),
-          Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildCategoryItem(categories[0]),
-                  _buildCategoryItem(categories[1]),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildCategoryItem(categories[2]),
-                  _buildCategoryItem(categories[3]),
-                ],
-              ),
-            ],
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildCategoryItem(categories[0]),
+                    _buildCategoryItem(categories[1]),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildCategoryItem(categories[2]),
+                    _buildCategoryItem(categories[3]),
+                  ],
+                ),
+              ],
+            ),
           )
         ],
       ),
@@ -302,65 +319,90 @@ Widget _buildCategoryItem(Category category) {
   );
 }
 
-//Item
 class ProductItem extends StatelessWidget {
   final String imagePath;
   final String title;
+  final VoidCallback onTap;
 
   const ProductItem({
-    super.key,
+    Key? key,
     required this.imagePath,
     required this.title,
-  });
+    required this.onTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      elevation: 5.0,
-      child: Column(
-        children: [
-          ClipRRect(
-            borderRadius:
-                const BorderRadius.vertical(top: Radius.circular(15.0)),
-            child: Image.asset(
-              imagePath,
-              fit: BoxFit.cover,
-              height: 100.0,
-              width: double.infinity,
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        elevation: 5.0,
+        child: Column(
+          children: [
+            ClipRRect(
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(15.0)),
+              child: Image.asset(
+                imagePath,
+                fit: BoxFit.cover,
+                height: 100.0,
+                width: double.infinity,
+              ),
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(8.0),
-            color: Colors.white,
-            child: Text(
-              title,
-              style: const TextStyle(fontSize: 16.0),
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              color: Colors.white,
+              child: Text(
+                title,
+                style: const TextStyle(fontSize: 16.0),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
 Widget item() {
-  return const Padding(
-    padding: EdgeInsets.all(16.0),
+  return Padding(
+    padding: const EdgeInsets.all(15.0),
     child: Column(
       children: [
+        Column(
+          children: [
+            Text(
+              "Recomended",
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+            ),
+            Text('chouses by your activity'),
+          ],
+        ),
         Row(
           children: [
             Expanded(
               child: ProductItem(
-                  imagePath: 'Asset/Screenshot (177).png', title: 'Product 1'),
+                imagePath: 'Asset/Screenshot (177).png',
+                title: 'Product 1',
+                onTap: () {
+                  // Handle tap for Product 1
+                  print('Product 1 tapped');
+                },
+              ),
             ),
             SizedBox(width: 16.0),
             Expanded(
               child: ProductItem(
-                  imagePath: 'Asset/Screenshot (176).png', title: 'Product 2'),
+                imagePath: 'Asset/Screenshot (176).png',
+                title: 'Product 2',
+                onTap: () {
+                  // Handle tap for Product 2
+                  print('Product 2 tapped');
+                },
+              ),
             ),
           ],
         ),
@@ -369,12 +411,24 @@ Widget item() {
           children: [
             Expanded(
               child: ProductItem(
-                  imagePath: 'Asset/Screenshot (175).png', title: 'Product 3'),
+                imagePath: 'Asset/Screenshot (175).png',
+                title: 'Product 3',
+                onTap: () {
+                  // Handle tap for Product 3
+                  print('Product 3 tapped');
+                },
+              ),
             ),
             SizedBox(width: 16.0),
             Expanded(
               child: ProductItem(
-                  imagePath: 'Asset/Screenshot (174).png', title: 'Product 4'),
+                imagePath: 'Asset/Screenshot (174).png',
+                title: 'Product 4',
+                onTap: () {
+                  // Handle tap for Product 4
+                  print('Product 4 tapped');
+                },
+              ),
             ),
           ],
         ),
