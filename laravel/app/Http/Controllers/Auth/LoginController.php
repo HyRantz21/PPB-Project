@@ -16,18 +16,19 @@ class LoginController extends Controller
             'name' => 'required',
             'password' => 'required',
         ]);
-
+      
        // Attempt to find the user
        $user = User::where('name', $request->name)->first();
 
        // If user is found and the password is correct
        if ($user) {
            $token = $user->createToken('LaravelAuthApp')->plainTextToken;
+           User::where('name',$user->name)->update(['remember_token'=> $token]);
            return response()->json(['token' => $token], 200);
        } else {
            // If user is not found or password is incorrect
-           return response()->json(['error' => 'Invalid email or password'], 401);
+           return response()->json(['error' => 'Invalid name or password'], 401);
        }
-        
+       
     }
 }
