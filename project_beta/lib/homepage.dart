@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/widgets.dart';
+import 'package:project_beta/login.dart';
+import 'package:project_beta/service/api.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -10,6 +12,18 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  final ApiService _apiService = ApiService();
+
+  void _logout(BuildContext context) async {
+    await _apiService.logout();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const Login(),
+      ),
+    );
+  }
+
   int currentPageIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -21,8 +35,8 @@ class _HomepageState extends State<Homepage> {
             currentPageIndex = index;
           });
         },
-        backgroundColor: Color.fromARGB(255, 0, 0, 0),
-        indicatorColor: Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+        indicatorColor: const Color.fromARGB(255, 255, 255, 255),
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
@@ -120,8 +134,13 @@ class _HomepageState extends State<Homepage> {
                   ? // Wishlist page
                   const Center(child: Text('Wishlist'))
                   : // Profile page
-                  const Center(
-                      child: Text('Profile'),
+                  Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _logout(context);
+                        },
+                        child: const Text('Logout'),
+                      ),
                     ),
     );
   }
@@ -372,7 +391,7 @@ Widget item() {
     padding: const EdgeInsets.all(15.0),
     child: Column(
       children: [
-        Column(
+        const Column(
           children: [
             Text(
               "Recomended",
@@ -393,7 +412,7 @@ Widget item() {
                 },
               ),
             ),
-            SizedBox(width: 16.0),
+            const SizedBox(width: 16.0),
             Expanded(
               child: ProductItem(
                 imagePath: 'Asset/Screenshot (176).png',
@@ -406,7 +425,7 @@ Widget item() {
             ),
           ],
         ),
-        SizedBox(height: 16.0),
+        const SizedBox(height: 16.0),
         Row(
           children: [
             Expanded(
@@ -419,7 +438,7 @@ Widget item() {
                 },
               ),
             ),
-            SizedBox(width: 16.0),
+            const SizedBox(width: 16.0),
             Expanded(
               child: ProductItem(
                 imagePath: 'Asset/Screenshot (174).png',

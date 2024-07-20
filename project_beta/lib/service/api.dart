@@ -3,12 +3,22 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = "http://10.0.2.2:8000/api";
+  static const String baseUrl = "http://127.0.0.1:8000/api";
+
+  Future<Map<String, dynamic>> register(
+      String name, String email, String password) async {
+    final response = await http.post(Uri.parse('$baseUrl/register'), body: {
+      'name': name,
+      'email': email,
+      'password': password,
+    });
+    return json.decode(response.body);
+  }
 
   // login
   Future<Map<String, dynamic>> login(String name, String password) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/logins'),
+      Uri.parse('$baseUrl/login'),
       body: {
         'name': name,
         'password': password,
@@ -26,29 +36,18 @@ class ApiService {
     return json.decode(response.body);
   }
 
+  // Logout
   Future<void> logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
-    print('Token: $token');
-
     final response = await http.post(
-      Uri.parse('$baseUrl/logouts'),
+      Uri.parse('$baseUrl/logout'),
       headers: {
         'Authorization': 'Bearer $token',
       },
     );
-
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
-
     if (response.statusCode == 200) {
-      print('Logout successful');
-      // Remove token from SharedPreferences
       await prefs.remove('token');
-    } else {
-      // Handle error
-      print('Failed to logout');
-      throw Exception('Failed to logout');
     }
   }
 }
