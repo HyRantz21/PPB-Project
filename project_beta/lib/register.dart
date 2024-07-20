@@ -1,6 +1,5 @@
 // register.dart
 import 'package:flutter/material.dart';
-import 'package:project_beta/homepage.dart';
 import 'package:project_beta/login.dart';
 import 'package:project_beta/service/api.dart';
 
