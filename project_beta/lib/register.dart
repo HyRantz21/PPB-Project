@@ -11,6 +11,79 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Register'),
+      ),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Logo
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25),
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Text(
+                'Welcome, nice to meet you!',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
+              ),
+              const SizedBox(height: 20),
+
+              // Form
+              const RegisterForm(),
+              // End form
+
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Already have an account?'),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Login()),
+                        );
+                      },
+                      child: const Text(
+                        ' Login now!',
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class RegisterForm extends StatefulWidget {
+  const RegisterForm({super.key});
+
+  @override
+  State<RegisterForm> createState() => RegisterFormState();
+}
+
+class RegisterFormState extends State<RegisterForm> {
   final ApiService _apiService = ApiService();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -38,18 +111,25 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Name'),
+    return Form(
+      child: Column(children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              border: Border.all(color: Colors.white),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: TextFormField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'password',
+                ),
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
                     return 'Please enter your name';
@@ -57,9 +137,25 @@ class _RegisterState extends State<Register> {
                   return null;
                 },
               ),
-              TextFormField(
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              border: Border.all(color: Colors.white),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: TextFormField(
                 controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'example@mail.com',
+                ),
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
                     return 'Please enter your email';
@@ -70,29 +166,63 @@ class _RegisterState extends State<Register> {
                   return null;
                 },
               ),
-              TextFormField(
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              border: Border.all(color: Colors.white),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: TextFormField(
                 controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Password'),
                 obscureText: true,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'password',
+                ),
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
-                    return 'Please enter your password';
-                  }
-                  if (value!.length < 6) {
-                    return 'Password must be at least 6 characters long';
+                    return 'Password can\'t be blank';
                   }
                   return null;
                 },
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _register,
-                child: const Text('Register'),
-              ),
-            ],
+            ),
           ),
         ),
-      ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+          child: ElevatedButton(
+            onPressed: _register,
+            style: ButtonStyle(
+              minimumSize: MaterialStateProperty.all(
+                const Size(double.infinity, 0),
+              ),
+              backgroundColor: MaterialStateProperty.all(
+                const Color.fromARGB(255, 0, 0, 0),
+              ),
+              padding: MaterialStateProperty.all(
+                const EdgeInsets.all(20),
+              ),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            child: const Text(
+              'Register',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          ),
+        ),
+      ]),
     );
   }
 }

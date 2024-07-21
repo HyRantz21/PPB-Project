@@ -24,25 +24,17 @@ class LoginState extends State<Login> {
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 25),
               ),
-              const SizedBox(
-                height: 25,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 25),
+              const SizedBox(height: 10),
               const Text(
                 'Welcome back, you\'ve been missed!',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
               ),
               const SizedBox(height: 20),
-
               // Form
               const Loginform(),
               // End form
-
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Row(
@@ -108,7 +100,7 @@ class LoginformState extends State<Loginform> {
         children: [
           // Username or email
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25),
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.grey[200],
@@ -133,12 +125,9 @@ class LoginformState extends State<Loginform> {
               ),
             ),
           ),
-
-          const SizedBox(height: 10),
-
           // Password
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25),
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.grey[200],
@@ -164,12 +153,9 @@ class LoginformState extends State<Loginform> {
               ),
             ),
           ),
-
-          const SizedBox(height: 20),
-
           // Sign in button
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25),
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
             child: ElevatedButton(
               onPressed: _login,
               style: ButtonStyle(
