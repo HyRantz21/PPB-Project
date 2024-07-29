@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/widgets.dart';
+import 'package:project_beta/aboutus.dart';
+import 'package:project_beta/itemDetail.dart';
 import 'package:project_beta/login.dart';
 import 'package:project_beta/service/api.dart';
 
@@ -13,6 +14,35 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   final ApiService _apiService = ApiService();
+  List<ProductItem> filteredProducts = [];
+  List<ProductItem> allProducts = [
+    const ProductItem(
+      imagePath: 'Asset/Screenshot (177).png',
+      title: 'Product 1',
+      price: '788.000',
+      descrip: 'andlanxcanAWHD AWODIJAWJXAWXNDAWXHDOAW AOWHDOAWXHDAOIDS',
+    ),
+    const ProductItem(
+      imagePath: 'Asset/Screenshot (176).png',
+      title: 'Product 2',
+      price: '1.299.000',
+      descrip: 'andlanxcanAWHD AWODIJAWJXAWXNDAWXHDOAW AOWHDOAWXHDAOIDS',
+    ),
+    const ProductItem(
+      imagePath: 'Asset/Screenshot (174).png',
+      title: 'Product 4',
+      price: '899.000',
+      descrip: 'andlanxcanAWHD AWODIJAWJXAWXNDAWXHDOAW AOWHDOAWXHDAOIDS',
+    ),
+    const ProductItem(
+      imagePath: 'Asset/Screenshot (175).png',
+      title: 'Product 3',
+      price: '909.000',
+      descrip: 'andlanxcanAWHD AWODIJAWJXAWXNDAWXHDOAW AOWHDOAWXHDAOIDS',
+    ),
+  ];
+
+  TextEditingController searchController = TextEditingController();
 
   void _logout(BuildContext context) async {
     await _apiService.logout();
@@ -24,124 +54,104 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  int currentPageIndex = 0;
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      //BottomNavBar
-      bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
-        },
-        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
-        indicatorColor: const Color.fromARGB(255, 255, 255, 255),
-        selectedIndex: currentPageIndex,
-        destinations: const <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(
-              Icons.home_outlined,
-              color: Colors.white,
-            ),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(
-              Icons.history,
-              color: Colors.white,
-            ),
-            label: 'History',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.bookmark),
-            icon: Icon(
-              Icons.bookmark_outline,
-              color: Colors.white,
-            ),
-            label: 'Wishlist',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.person),
-            icon: Icon(
-              Icons.person_outlined,
-              color: Colors.white,
-            ),
-            label: 'Profile',
-          ),
-        ],
-      ),
+  void initState() {
+    super.initState();
+    filteredProducts = List.from(allProducts);
+    searchController.addListener(() {
+      filterSearchResults(searchController.text);
+    });
+  }
 
-      //AppBar
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: const Text(
-          'Venture',
-          style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
-        ),
-        actions: [
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.notifications),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(Icons.shopping_cart),
-                onPressed: () {},
-              )
-            ],
-          ),
-        ],
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  void filterSearchResults(String query) {
+    if (query.isNotEmpty) {
+      setState(() {
+        filteredProducts = allProducts.where((product) {
+          return product.title.toLowerCase().contains(query.toLowerCase());
+        }).toList();
+      });
+    } else {
+      setState(() {
+        filteredProducts = List.from(allProducts);
+      });
+    }
+  }
+
+  //Searchbar
+  Widget searchbar() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 25,
+        left: 40,
+        right: 40,
       ),
-      body: currentPageIndex == 0
-          ? SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    height: 1000,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 245, 245, 245),
-                      borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(15),
-                          bottomRight: Radius.circular(15)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(1),
-                          spreadRadius: 0.5,
-                          blurRadius: 1.5,
-                          offset: const Offset(2, 2),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        carousel(),
-                        categoryList(),
-                        item(),
-                      ],
-                    ),
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 3,
+                  offset: const Offset(2, 2),
+                ),
+              ],
+            ),
+            child: TextField(
+              controller: searchController,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search),
+                hintText: 'Search products',
+                fillColor: Colors.white,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+          ),
+          if (searchController.text.isNotEmpty)
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 10,
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),
-            )
-          : currentPageIndex == 1
-              ? // History page
-              const Center(child: Text('History'))
-              : currentPageIndex == 2
-                  ? // Wishlist page
-                  const Center(child: Text('Wishlist'))
-                  : // Profile page
-                  Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          _logout(context);
-                        },
-                        child: const Text('Logout'),
-                      ),
+              child: ListView(
+                shrinkWrap: true,
+                children: filteredProducts.map((product) {
+                  return ListTile(
+                    leading: Image.asset(
+                      product.imagePath,
+                      width: 50.0,
+                      height: 50.0,
+                      fit: BoxFit.cover,
                     ),
+                    title: Text(product.title),
+                    subtitle: Text(product.price),
+                    onTap: () {},
+                  );
+                }).toList(),
+              ),
+            ),
+        ],
+      ),
     );
   }
 
@@ -249,6 +259,194 @@ class _HomepageState extends State<Homepage> {
       ),
     );
   }
+
+  int currentPageIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      // AppBar
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        shadowColor: const Color.fromARGB(255, 0, 0, 0),
+        surfaceTintColor: Colors.white,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Color.fromARGB(255, 0, 0, 0)),
+        title: const Text(
+          'Venture',
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontSize: 30,
+            shadows: [
+              Shadow(
+                blurRadius: 0.5,
+                color: Colors.grey,
+                offset: Offset(1.5, 1.0),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.notifications,
+                  shadows: [
+                    Shadow(
+                      blurRadius: 0.5,
+                      color: Colors.grey,
+                      offset: Offset(1.5, 1.0),
+                    ),
+                  ],
+                ),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.info,
+                  shadows: [
+                    Shadow(
+                      blurRadius: 0.5,
+                      color: Colors.grey,
+                      offset: Offset(1.5, 1.0),
+                    ),
+                  ],
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AboutUs(),
+                    ),
+                  );
+                },
+              )
+            ],
+          ),
+        ],
+      ),
+
+      //bottom navbar
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentPageIndex,
+        onTap: (int index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+        },
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        selectedItemColor: const Color.fromARGB(255, 0, 0, 0),
+        unselectedItemColor: const Color.fromARGB(255, 0, 0, 0),
+        selectedLabelStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+        unselectedLabelStyle: const TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 14,
+        ),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart_outlined),
+            label: 'Cart',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bookmark_outline),
+            label: 'Wishlist',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outlined),
+            label: 'Profile',
+          ),
+        ],
+      ),
+
+      body: currentPageIndex == 0
+          ? SingleChildScrollView(
+              child: Column(
+                children: [
+                  Stack(
+                    children: [
+                      carousel(),
+                      searchbar(),
+                    ],
+                  ),
+                  categoryList(),
+                  item(),
+                ],
+              ),
+            )
+          : currentPageIndex == 1
+              ? // History page
+              const Center(child: Text('Cart'))
+              : currentPageIndex == 2
+                  ? // Wishlist page
+                  const Center(child: Text('Wishlist'))
+                  : // Profile page
+                  Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const CircleAvatar(
+                              radius: 50,
+                              backgroundImage:
+                                  AssetImage('Asset/Screenshot (181).png'),
+                            ),
+                            const SizedBox(height: 16),
+                            const Text(
+                              'John Doe',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            const Text(
+                              'johndoe@example.com',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            Expanded(
+                              child: ListView(
+                                shrinkWrap: true,
+                                children: [
+                                  ListTile(
+                                    title: const Text('Edit Profile'),
+                                    leading: const Icon(Icons.edit),
+                                    onTap: () {
+                                      // Handle edit profile action
+                                    },
+                                  ),
+                                  ListTile(
+                                    title: const Text('Logout'),
+                                    leading: const Icon(Icons.logout),
+                                    tileColor: Colors.red[100],
+                                    textColor: Colors.black,
+                                    onTap: () {
+                                      _logout(context);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+    );
+  }
 }
 
 class Category {
@@ -341,29 +539,43 @@ Widget _buildCategoryItem(Category category) {
 class ProductItem extends StatelessWidget {
   final String imagePath;
   final String title;
-  final VoidCallback onTap;
+  final String descrip;
+  final String price;
 
   const ProductItem({
-    Key? key,
+    super.key,
     required this.imagePath,
     required this.title,
-    required this.onTap,
-  }) : super(key: key);
+    required this.descrip,
+    required this.price,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ItemDetail(
+              imagePath: imagePath,
+              title: title,
+              descrip: descrip,
+              price: price,
+            ),
+          ),
+        );
+      },
       child: Card(
+        color: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
         ),
         elevation: 5.0,
-        child: Column(
+        child: Stack(
           children: [
             ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(15.0)),
+              borderRadius: BorderRadius.circular(15.0),
               child: Image.asset(
                 imagePath,
                 fit: BoxFit.cover,
@@ -371,12 +583,37 @@ class ProductItem extends StatelessWidget {
                 width: double.infinity,
               ),
             ),
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              color: Colors.white,
-              child: Text(
-                title,
-                style: const TextStyle(fontSize: 16.0),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(15.0),
+                  ),
+                ),
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                          fontSize: 11.0,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'Rp.$price',
+                      style: const TextStyle(
+                        fontSize: 11.0,
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ],
@@ -387,17 +624,17 @@ class ProductItem extends StatelessWidget {
 }
 
 Widget item() {
-  return Padding(
-    padding: const EdgeInsets.all(15.0),
+  return const Padding(
+    padding: EdgeInsets.all(15.0),
     child: Column(
       children: [
-        const Column(
+        Column(
           children: [
             Text(
               "Recomended",
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
             ),
-            Text('chouses by your activity'),
+            Text('chosen by your activity'),
           ],
         ),
         Row(
@@ -406,47 +643,43 @@ Widget item() {
               child: ProductItem(
                 imagePath: 'Asset/Screenshot (177).png',
                 title: 'Product 1',
-                onTap: () {
-                  // Handle tap for Product 1
-                  print('Product 1 tapped');
-                },
+                price: '788.000',
+                descrip:
+                    'andlanxcanAWHD AWODIJAWJXAWXNDAWXHDOAW AOWHDOAWXHDAOIDS',
               ),
             ),
-            const SizedBox(width: 16.0),
+            SizedBox(width: 16.0),
             Expanded(
               child: ProductItem(
                 imagePath: 'Asset/Screenshot (176).png',
                 title: 'Product 2',
-                onTap: () {
-                  // Handle tap for Product 2
-                  print('Product 2 tapped');
-                },
+                price: '1.299.000',
+                descrip:
+                    'andlanxcanAWHD AWODIJAWJXAWXNDAWXHDOAW AOWHDOAWXHDAOIDS',
               ),
             ),
           ],
         ),
-        const SizedBox(height: 16.0),
+        SizedBox(height: 16.0),
         Row(
           children: [
             Expanded(
               child: ProductItem(
                 imagePath: 'Asset/Screenshot (175).png',
                 title: 'Product 3',
-                onTap: () {
-                  // Handle tap for Product 3
-                  print('Product 3 tapped');
-                },
+                price: '909.000',
+                descrip:
+                    'andlanxcanAWHD AWODIJAWJXAWXNDAWXHDOAW AOWHDOAWXHDAOIDS',
               ),
             ),
-            const SizedBox(width: 16.0),
+            SizedBox(width: 16.0),
             Expanded(
               child: ProductItem(
                 imagePath: 'Asset/Screenshot (174).png',
                 title: 'Product 4',
-                onTap: () {
-                  // Handle tap for Product 4
-                  print('Product 4 tapped');
-                },
+                price: '899.000',
+                descrip:
+                    'andlanxcanAWHD AWODIJAWJXAWXNDAWXHDOAW AOWHDOAWXHDAOIDS',
               ),
             ),
           ],

@@ -24,8 +24,14 @@ class _RegisterState extends State<Register> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Logo
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+                child: Container(
+                  width: 300,
+                  height: 300,
+                  child: Image.asset('Asset/loginpage.png'),
+                ),
               ),
               const SizedBox(
                 height: 25,
@@ -57,7 +63,8 @@ class _RegisterState extends State<Register> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Login()),
+                            builder: (context) => const Login(),
+                          ),
                         );
                       },
                       child: const Text(
@@ -124,11 +131,11 @@ class RegisterFormState extends State<RegisterForm> {
             child: Padding(
               padding: const EdgeInsets.only(left: 20),
               child: TextFormField(
-                controller: _passwordController,
+                controller: _nameController,
                 obscureText: true,
                 decoration: const InputDecoration(
                   border: InputBorder.none,
-                  hintText: 'password',
+                  hintText: 'Usersame',
                 ),
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
@@ -201,16 +208,16 @@ class RegisterFormState extends State<RegisterForm> {
           child: ElevatedButton(
             onPressed: _register,
             style: ButtonStyle(
-              minimumSize: MaterialStateProperty.all(
+              minimumSize: WidgetStateProperty.all(
                 const Size(double.infinity, 0),
               ),
-              backgroundColor: MaterialStateProperty.all(
+              backgroundColor: WidgetStateProperty.all(
                 const Color.fromARGB(255, 0, 0, 0),
               ),
-              padding: MaterialStateProperty.all(
+              padding: WidgetStateProperty.all(
                 const EdgeInsets.all(20),
               ),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),

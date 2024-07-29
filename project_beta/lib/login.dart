@@ -21,8 +21,14 @@ class LoginState extends State<Login> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Logo
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+                child: Container(
+                  width: 300,
+                  height: 300,
+                  child: Image.asset('Asset/loginpage.png'),
+                ),
               ),
               const SizedBox(height: 25),
               const SizedBox(height: 10),
@@ -46,7 +52,8 @@ class LoginState extends State<Login> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Register()),
+                            builder: (context) => const Register(),
+                          ),
                         );
                       },
                       child: const Text(
@@ -159,16 +166,16 @@ class LoginformState extends State<Loginform> {
             child: ElevatedButton(
               onPressed: _login,
               style: ButtonStyle(
-                minimumSize: MaterialStateProperty.all(
+                minimumSize: WidgetStateProperty.all(
                   const Size(double.infinity, 0),
                 ),
-                backgroundColor: MaterialStateProperty.all(
+                backgroundColor: WidgetStateProperty.all(
                   const Color.fromARGB(255, 0, 0, 0),
                 ),
-                padding: MaterialStateProperty.all(
+                padding: WidgetStateProperty.all(
                   const EdgeInsets.all(20),
                 ),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
